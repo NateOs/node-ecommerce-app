@@ -1,14 +1,27 @@
 require("dotenv").config();
+require("express-async-errors"); //sets up try catch for all routes
+
+// express
 const express = require("express");
 
 const app = express();
 const port = process.env.PORT || 5000;
 
+// db
+const connectDB = require("./db/connect");
+
+// middleware
+const notFoundMiddleware = require("./middleware/not-found"); // returns a 404 message, when route is not found
+const errorHandlerMiddleware = require("./middleware/error-handler"); // returns human readable errors
+
+app.use(express.json()); // allows you to parse json from req.body
+
 app.get("/", (req, res) => {
-  res.send("App is ready");
+  res.send({ msg: "ecommerce api" });
 });
 
-const connectDB = require("./db/connect");
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 const start = async () => {
   try {

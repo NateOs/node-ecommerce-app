@@ -1,6 +1,6 @@
 require("dotenv").config();
 require("express-async-errors"); //sets up try catch for all routes
-
+const authRouter = require("./routes/authRoutes");
 // express
 const express = require("express");
 
@@ -8,7 +8,6 @@ const app = express();
 
 // other packages
 const morgan = require("morgan");
-
 
 const port = process.env.PORT || 5000;
 
@@ -19,8 +18,11 @@ const connectDB = require("./db/connect");
 const notFoundMiddleware = require("./middleware/not-found"); // returns a 404 message, when route is not found
 const errorHandlerMiddleware = require("./middleware/error-handler"); // returns human readable errors
 
-app.use(morgan('tiny'));
+app.use(morgan("tiny"));
 app.use(express.json()); // allows you to parse json from req.body
+
+// routes
+app.use("/api/v1/auth", authRouter); //
 
 app.get("/", (req, res) => {
   res.send({ msg: "ecommerce api" });

@@ -18,14 +18,19 @@ const login = async (req, res, next) => {
 };
 
 const register = async (req, res, next) => {
-  const { email } = req.body;
-  const existingEmail = User.findOne({ email: email });
+  const { email, password, name } = req.body;
+
+  // first user created is admin
+  let isFirstUser = (await User.countDocuments({})) === 0;
+  const role = isFirstUser ? "admin" : "user";
+
+  let existingEmail = await User.findOne({ email });
 
   if (existingEmail) {
     throw new BadRequestError("Email already exists");
   }
-  
-  const user = await User.create(req.body);
+
+  const user = await User.create({ email, password, name, role });
   res.status(StatusCodes.CREATED).send(user);
 };
 

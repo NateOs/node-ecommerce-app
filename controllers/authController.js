@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
+const { createJWT } = require("../utils");
 const {
   CustomAPIError,
   UnauthenticatedError,
@@ -31,7 +32,19 @@ const register = async (req, res, next) => {
   }
 
   const user = await User.create({ email, password, name, role });
-  res.status(StatusCodes.CREATED).send(user);
+
+  const tokenUser = { userId: user._id, name: user.name };
+
+  const token = createJWT({ payload: tokenUser });
+
+  res.status(StatusCodes.CREATED).send({
+    user: {
+      userId: user._id,
+      name: user.name,
+      role: user.role,
+    },
+    token: token,
+  });
 };
 
 module.exports = { register, login, logout };

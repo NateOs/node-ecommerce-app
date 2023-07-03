@@ -37,13 +37,20 @@ const register = async (req, res, next) => {
 
   const token = createJWT({ payload: tokenUser });
 
+  const oneDay = 1000 * 24 * 60 * 60;
+
+  // cookies sent as part of response are not secure
+  // instead browser will keep cookies for subsequent requests
+
+  res.cookie("token", token, {
+    httpOnly: true,
+    expires: new Date(Date.now() + oneDay),
+  });
+
   res.status(StatusCodes.CREATED).send({
     user: {
-      userId: user._id,
-      name: user.name,
-      role: user.role,
+      tokenUser,
     },
-    token: token,
   });
 };
 

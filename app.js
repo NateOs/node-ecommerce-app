@@ -1,6 +1,9 @@
 require("dotenv").config();
 require("express-async-errors"); //sets up try catch for all routes
+
 const authRouter = require("./routes/authRoutes");
+const cookieParser = require("cookie-parser");
+
 // express
 const express = require("express");
 
@@ -20,6 +23,7 @@ const errorHandlerMiddleware = require("./middleware/error-handler"); // returns
 
 app.use(morgan("tiny"));
 app.use(express.json()); // allows you to parse json from req.body
+app.use(cookieParser());
 
 // routes
 app.use("/api/v1/auth", authRouter); //

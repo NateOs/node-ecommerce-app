@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
-const { createJWT } = require("../utils");
+const { attachCookiesToResponse } = require("../utils");
 const {
   CustomAPIError,
   UnauthenticatedError,
@@ -35,17 +35,8 @@ const register = async (req, res, next) => {
 
   const tokenUser = { userId: user._id, name: user.name };
 
-  const token = createJWT({ payload: tokenUser });
-
-  const oneDay = 1000 * 24 * 60 * 60;
-
-  // cookies sent as part of response are not secure
-  // instead browser will keep cookies for subsequent requests
-
-  res.cookie("token", token, {
-    httpOnly: true,
-    expires: new Date(Date.now() + oneDay),
-  });
+  //  creating jwt combined with cookies setting
+  attachCookiesToResponse({ res, user: tokenUser });
 
   res.status(StatusCodes.CREATED).send({
     user: {

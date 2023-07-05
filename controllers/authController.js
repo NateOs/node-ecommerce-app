@@ -40,7 +40,9 @@ const register = async (req, res, next) => {
 
   res.status(StatusCodes.CREATED).send({
     user: {
-      tokenUser,
+      name: user.name,
+      userId: user._id,
+      role: user.role,
     },
   });
 };

@@ -23,12 +23,13 @@ const errorHandlerMiddleware = require("./middleware/error-handler"); // returns
 
 app.use(morgan("tiny"));
 app.use(express.json()); // allows you to parse json from req.body
-app.use(cookieParser());
+app.use(cookieParser(process.env.JWT_SECRET));
 
 // routes
 app.use("/api/v1/auth", authRouter); //
 
 app.get("/", (req, res) => {
+  console.log(req.signedCookies);
   res.send({ msg: "ecommerce api" });
 });
 

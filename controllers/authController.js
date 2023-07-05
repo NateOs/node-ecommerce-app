@@ -13,9 +13,24 @@ const logout = async (req, res, next) => {
   res.send("logout route");
 };
 
-const login = async (req, res, next) => {
-  console.log("login user");
-  res.send("login route");
+const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    throw new BadRequestError("Email or password is required");
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new UnauthenticatedError("Invalid credentials");
+  }
+
+  const tokenUser = { userId: user._id, name: user.name };
+
+  //  creating jwt combined with cookies setting
+  attachCookiesToResponse({ res, user: tokenUser });
+
+  res.status(StatusCodes.CREATED).json({ user: tokenUser });
 };
 
 const register = async (req, res, next) => {

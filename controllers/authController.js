@@ -9,8 +9,11 @@ const {
 } = require("../errors");
 
 const logout = async (req, res, next) => {
-  console.log("logout user");
-  res.send("logout route");
+  res.cookie("token", "logout", {
+    httpOnly: true,
+    expires: new Date(Date.now()),
+  });
+  res.status(StatusCodes.OK).send("Logged out");
 };
 
 const login = async (req, res) => {

@@ -2,6 +2,7 @@ require("dotenv").config();
 require("express-async-errors"); //sets up try catch for all routes
 
 const authRouter = require("./routes/authRoutes");
+const userRouter = require("./routes/userRoutes");
 const cookieParser = require("cookie-parser");
 
 // express
@@ -27,6 +28,7 @@ app.use(cookieParser(process.env.JWT_SECRET));
 
 // routes
 app.use("/api/v1/auth", authRouter); //
+app.use("/api/v1/users", userRouter); //
 
 app.get("/", (req, res) => {
   console.log(req.signedCookies);

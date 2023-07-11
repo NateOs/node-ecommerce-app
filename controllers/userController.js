@@ -7,12 +7,25 @@ const {
   BadRequestError,
 } = require("../errors");
 
+// get all users
 const getAllUsers = async (req, res) => {
-  res.status(StatusCodes.OK).send("All users found");
+  const users = await User.find({ role: "user" }).select("-password");
+  res.status(StatusCodes.OK).json({ hits: users.length, users });
 };
+
+// get a user by id
 const getSingleUser = async (req, res) => {
-  res.status(StatusCodes.OK).send("Get single user");
+  const id = req.params.id;
+  const user = await User.findOne({ _id: id }).select("-password");
+
+  if (!user) {
+    throw new NotFoundError("User not found with id: " + id);
+  }
+  res.status(StatusCodes.OK).json({
+    user,
+  });
 };
+
 const showCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).send("show currrent user");
 };

@@ -9,6 +9,7 @@ const {
 
 // get all users
 const getAllUsers = async (req, res) => {
+  console.log(req.user);
   const users = await User.find({ role: "user" }).select("-password");
   res.status(StatusCodes.OK).json({ hits: users.length, users });
 };

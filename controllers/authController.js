@@ -28,7 +28,7 @@ const login = async (req, res) => {
     throw new UnauthenticatedError("Invalid credentials");
   }
 
-  const tokenUser = { userId: user._id, name: user.name };
+  const tokenUser = { userId: user._id, name: user.name, role: user.role };
 
   //  creating jwt combined with cookies setting
   attachCookiesToResponse({ res, user: tokenUser });
@@ -51,7 +51,7 @@ const register = async (req, res, next) => {
 
   const user = await User.create({ email, password, name, role });
 
-  const tokenUser = { userId: user._id, name: user.name };
+  const tokenUser = { userId: user._id, name: user.name, role: user.role };
 
   //  creating jwt combined with cookies setting
   attachCookiesToResponse({ res, user: tokenUser });

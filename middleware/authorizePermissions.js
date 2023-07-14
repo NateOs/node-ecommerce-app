@@ -6,11 +6,13 @@ const {
   BadRequestError,
 } = require("../errors");
 
-const authorizePermissions = async (req, res, next) => {
-  if (req.user.role !== "admin") {
-    throw new UnauthorizedError("Unauthorized to access this route");
-  }
-  next();
+const authorizePermissions = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      throw new UnauthorizedError("User is not authorized to view this page");
+    }
+    next();
+  };
 };
 
 module.exports = {

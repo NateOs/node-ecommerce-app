@@ -12,7 +12,7 @@ const {
 
 router
   .route("/")
-  .get(authenticateUser, authorizePermissions("admin","user"), getAllUsers);
+  .get(authenticateUser, authorizePermissions("admin",), getAllUsers);
 router.route("/updateUser").post(updateUser);
 router.route("/showMe").get(showCurrentUser);
 router.route("/updateUserPassword").get(updateUserPassword);

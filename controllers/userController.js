@@ -9,7 +9,6 @@ const {
 
 // get all users
 const getAllUsers = async (req, res) => {
-  console.log(req.user);
   const users = await User.find({ role: "user" }).select("-password");
   res.status(StatusCodes.OK).json({ hits: users.length, users });
 };
@@ -28,17 +27,34 @@ const getSingleUser = async (req, res) => {
 };
 
 const showCurrentUser = async (req, res) => {
-  res.status(StatusCodes.OK).json(req.user);
+  res.status(StatusCodes.OK).json({ user: req.user });
 };
 
 const updateUser = async (req, res) => {
   res.status(StatusCodes.OK).send("update user");
 };
-const updateUserPassword = async (req, res) => {
-  res.status(StatusCodes.OK).send("Update user pwd");
-};
 
-// getAllUsers,getSingleUser,showCurrentUser,updateUser,updateUserPassword
+const updateUserPassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword) {
+    throw new BadRequestError("Provide old and new password");
+  }
+
+  const user = await User.findOne({ _id: req.user.userId });
+
+  const isPasswordValid = await user.comparePassword(oldPassword);
+  if (!isPasswordValid) {
+    throw new UnauthenticatedError("Password is incorrect");
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: "password update completed successfully" });
+};
 
 module.exports = {
   getAllUsers,

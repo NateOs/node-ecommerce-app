@@ -49,6 +49,12 @@ const login = async (req, res) => {
     throw new UnauthenticatedError("Invalid credentials");
   }
 
+  const isPasswordValid = await user.comparePassword(password);
+
+  if (!isPasswordValid) {
+    throw new UnauthenticatedError("Invalid credentials");
+  }
+
   const tokenUser = { userId: user._id, name: user.name, role: user.role };
 
   //  creating jwt combined with cookies setting

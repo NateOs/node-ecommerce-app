@@ -8,34 +8,6 @@ const {
   BadRequestError,
 } = require("../errors");
 
-const logout = async (req, res, next) => {
-  res.cookie("token", "logout", {
-    httpOnly: true,
-    expires: new Date(Date.now()),
-  });
-  res.status(StatusCodes.OK).send("Logged out");
-};
-
-const login = async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    throw new BadRequestError("Email or password is required");
-  }
-
-  const user = await User.findOne({ email });
-  if (!user) {
-    throw new UnauthenticatedError("Invalid credentials");
-  }
-
-  const tokenUser = { userId: user._id, name: user.name, role: user.role };
-
-  //  creating jwt combined with cookies setting
-  attachCookiesToResponse({ res, user: tokenUser });
-
-  res.status(StatusCodes.CREATED).json({ user: tokenUser });
-};
-
 const register = async (req, res, next) => {
   const { email, password, name } = req.body;
 
@@ -63,6 +35,34 @@ const register = async (req, res, next) => {
       role: user.role,
     },
   });
+};
+
+const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    throw new BadRequestError("Email or password is required");
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new UnauthenticatedError("Invalid credentials");
+  }
+
+  const tokenUser = { userId: user._id, name: user.name, role: user.role };
+
+  //  creating jwt combined with cookies setting
+  attachCookiesToResponse({ res, user: tokenUser });
+
+  res.status(StatusCodes.CREATED).json({ user: tokenUser });
+};
+
+const logout = async (req, res, next) => {
+  res.cookie("token", "logout", {
+    httpOnly: true,
+    expires: new Date(Date.now()),
+  });
+  res.status(StatusCodes.OK).send("Logged out");
 };
 
 module.exports = { register, login, logout };

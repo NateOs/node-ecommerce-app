@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
-const { attachCookiesToResponse } = require("../utils");
+const { attachCookiesToResponse, createTokenUser } = require("../utils");
 const {
   CustomAPIError,
   UnauthenticatedError,
@@ -23,7 +23,7 @@ const register = async (req, res, next) => {
 
   const user = await User.create({ email, password, name, role });
 
-  const tokenUser = { userId: user._id, name: user.name, role: user.role };
+  const tokenUser = createTokenUser(user);
 
   //  creating jwt combined with cookies setting
   attachCookiesToResponse({ res, user: tokenUser });
@@ -55,7 +55,7 @@ const login = async (req, res) => {
     throw new UnauthenticatedError("Invalid credentials");
   }
 
-  const tokenUser = { userId: user._id, name: user.name, role: user.role };
+  const tokenUser = createTokenUser(user);
 
   //  creating jwt combined with cookies setting
   attachCookiesToResponse({ res, user: tokenUser });

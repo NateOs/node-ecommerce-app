@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
+const { attachCookiesToResponse, createTokenUser } = require("../utils");
 const {
   CustomAPIError,
   UnauthenticatedError,
@@ -31,7 +32,23 @@ const showCurrentUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  res.status(StatusCodes.OK).send("update user");
+  const { name, email } = req.body;
+  if (!name || !email) {
+    throw new BadRequestError("Please provide all values");
+  }
+  
+  const user = await User.findOneAndUpdate(
+    { _id: req.user.userId },
+    { name, email },
+    { new: true, runValidators: true },
+  );
+
+  const tokenUser = createTokenUser(user);
+  attachCookiesToResponse({ res, user: tokenUser });
+  res.status(StatusCodes.OK).json({
+    msg: "User updated successfully",
+    user: tokenUser,
+  });
 };
 
 const updateUserPassword = async (req, res) => {

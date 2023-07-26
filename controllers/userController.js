@@ -1,6 +1,10 @@
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
-const { attachCookiesToResponse, createTokenUser } = require("../utils");
+const {
+  attachCookiesToResponse,
+  createTokenUser,
+  checkPermissions,
+} = require("../utils");
 const {
   CustomAPIError,
   UnauthenticatedError,
@@ -22,6 +26,7 @@ const getSingleUser = async (req, res) => {
   if (!user) {
     throw new NotFoundError("User not found with id: " + id);
   }
+  checkPermissions(req.user, user._id); //
   res.status(StatusCodes.OK).json({
     user,
   });
@@ -36,7 +41,7 @@ const updateUser = async (req, res) => {
   if (!name || !email) {
     throw new BadRequestError("Please provide all values");
   }
-  
+
   const user = await User.findOneAndUpdate(
     { _id: req.user.userId },
     { name, email },

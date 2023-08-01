@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { authenticateUser } = require("../middleware/authentication");
+const { authorizePermissions } = require("../middleware/authorizePermissions");
 const {
   createProduct,
   getAllProducts,
@@ -12,11 +13,20 @@ const {
 
 // accessible to all
 router.route("/getAllProducts").get(getAllProducts);
-router.route("/getSingleProduct").get(getSingleProduct);
 
-// router.route("/updateUser").patch(authenticateUser, updateUser);
-// router.route("/showMe").get(authenticateUser, showCurrentUser);
-// router.route("/updateUserPassword").patch(authenticateUser, updateUserPassword);
-// router.route("/:id").get(authenticateUser, getSingleUser);
+router
+  .route("/")
+  .post([authenticateUser, authorizePermissions("admin")], createProduct)
+  .get(getAllProducts);
+
+router
+  .route("/:id")
+  .get(getSingleProduct)
+  .patch([authenticateUser, authorizePermissions("admin")], updateProduct)
+  .delete([authenticateUser, authorizePermissions("admin")], deleteProduct);
+
+router
+  .route("/uploadImage")
+  .post([authenticateUser, authorizePermissions("admin")], uploadImage);
 
 module.exports = router;

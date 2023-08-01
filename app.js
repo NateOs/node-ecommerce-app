@@ -3,6 +3,7 @@ require("express-async-errors"); //sets up try catch for all routes
 
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
+const productRouter = require("./routes/productRoutes");
 const cookieParser = require("cookie-parser");
 
 // express
@@ -27,8 +28,9 @@ app.use(express.json()); // allows you to parse json from req.body
 app.use(cookieParser(process.env.JWT_SECRET));
 
 // routes
-app.use("/api/v1/auth", authRouter); //
-app.use("/api/v1/users", userRouter); //
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/product", productRouter);
 
 app.get("/", (req, res) => {
   console.log(req.signedCookies);

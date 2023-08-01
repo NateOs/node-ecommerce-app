@@ -9,22 +9,22 @@ const {
 } = require("../errors");
 
 const createProduct = async (req, res) => {
-  res.status(StatuCodes.OK).json({ msg: "create products" });
+  res.status(StatusCodes.OK).json({ msg: "create products" });
 };
 const getAllProducts = async (req, res) => {
-  res.status(StatuCodes.OK).json({ msg: "all prodcuts" });
+  res.status(StatusCodes.OK).json({ msg: "all prodcuts" });
 };
 const getSingleProduct = async (req, res) => {
-  res.status(StatuCodes.OK).json({ msg: "single product" });
+  res.status(StatusCodes.OK).json({ msg: "single product" });
 };
 const updateProduct = async (req, res) => {
-  res.status(StatuCodes.OK).json({ msg: "update product" });
+  res.status(StatusCodes.OK).json({ msg: "update product" });
 };
 const deleteProduct = async (req, res) => {
-  res.status(StatuCodes.OK).json({ msg: "delete product" });
+  res.status(StatusCodes.OK).json({ msg: "delete product" });
 };
 const uploadImage = async (req, res) => {
-  res.status(StatuCodes.OK).json({ msg: "upload Image" });
+  res.status(StatusCodes.OK).json({ msg: "upload Image" });
 };
 
 module.exports = {

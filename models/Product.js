@@ -5,7 +5,7 @@ const ProductSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      trime: true,
+      trim: true,
       required: [true, "Please enter a name"],
       maxLength: [100, "Cannot exceed 100 characters"],
     },
@@ -37,6 +37,7 @@ const ProductSchema = new mongoose.Schema(
       },
     },
     colors: {
+      default: ["#222"],
       type: String,
       required: true,
     },

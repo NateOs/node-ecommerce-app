@@ -9,8 +9,12 @@ const {
 } = require("../errors");
 
 const createProduct = async (req, res) => {
-  res.status(StatusCodes.OK).json({ msg: "create products" });
+  req.body.user = req.user.userId;
+  console.log(req.body);
+  const product = await Product.create(req.body);
+  res.status(StatusCodes.CREATED).json({ product });
 };
+
 const getAllProducts = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "all prodcuts" });
 };

@@ -16,13 +16,30 @@ const createProduct = async (req, res) => {
 };
 
 const getAllProducts = async (req, res) => {
-  res.status(StatusCodes.OK).json({ msg: "all prodcuts" });
+  const products = await Product.find({});
+  res.status(StatusCodes.OK).json({ products });
 };
+
 const getSingleProduct = async (req, res) => {
-  res.status(StatusCodes.OK).json({ msg: "single product" });
+  const productId = req.params.id;
+  const product = await Product.find({ _id: productId });
+
+  res.status(StatusCodes.OK).json({ product });
 };
+
 const updateProduct = async (req, res) => {
-  res.status(StatusCodes.OK).json({ msg: "update product" });
+  const product = await Product.findByIdAndUpdate(
+    {
+      _id: req.params.id,
+      user: req.user.userId,
+    },
+    req.body,
+    { new: true, runValidators: true },
+  );
+  res.status(StatusCodes.OK).json({
+    msg: "Product updated successfully",
+    product,
+  });
 };
 const deleteProduct = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "delete product" });

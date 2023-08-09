@@ -1,5 +1,6 @@
 const Product = require("../models/Product");
 const { StatusCodes } = require("http-status-codes");
+const path = require("path");
 
 const {
   CustomAPIError,
@@ -31,7 +32,6 @@ const getSingleProduct = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-  //! add validation
   const product = await Product.findOneAndUpdate(
     {
       _id: req.params.id,
@@ -66,7 +66,27 @@ const deleteProduct = async (req, res) => {
 };
 
 const uploadImage = async (req, res) => {
-  res.status(StatusCodes.OK).json({ msg: "upload Image" });
+  const productImage = req.files.image;
+  const maxSize = 1024 * 1024;
+
+  if (!req.files) {
+    throw new BadRequestError("No file uploaded");
+  }
+
+  if (!productImage.mimetype.startsWith("image")) {
+    throw new CustomAPIError("Must be an image");
+  }
+
+  if (productImage.size > maxSize) {
+    throw new BadRequestError("Image size too big, should be less than 1MB");
+  }
+
+  const imagePath = path.join(
+    __dirname,
+    "../public/uploads/" + `${productImage.name}`,
+  );
+  await productImage.mv(imagePath);
+  res.status(StatusCodes.OK).json({ image: `/uploads/${productImage.name}` });
 };
 
 module.exports = {

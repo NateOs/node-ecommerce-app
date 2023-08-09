@@ -13,6 +13,7 @@ const app = express();
 
 // other packages
 const morgan = require("morgan");
+const fileUpload = require("express-fileupload");
 
 const port = process.env.PORT || 5000;
 
@@ -26,6 +27,8 @@ const errorHandlerMiddleware = require("./middleware/error-handler"); // returns
 app.use(morgan("tiny"));
 app.use(express.json()); // allows you to parse json from req.body
 app.use(cookieParser(process.env.JWT_SECRET));
+app.use(express.static("./public"));
+app.use(fileUpload());
 
 // routes
 app.use("/api/v1/auth", authRouter);

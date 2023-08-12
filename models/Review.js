@@ -16,7 +16,7 @@ const ReviewSchema = new mongoose.Schema(
     },
     comment: {
       type: String,
-      required: [true, "Please provide a title"],
+      required: [true, "Please provide a comment"],
       maxlength: 100,
     },
     user: {
@@ -32,6 +32,6 @@ const ReviewSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-ReviewSchema.index({ product: 1, user: 1 }, { unique: true });
+ReviewSchema.index({ product: 1, user: 1 }, { unique: true }); // means a user can post only one review to a product
 
 module.exports = mongoose.model("Review", ReviewSchema);

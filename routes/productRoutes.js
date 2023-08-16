@@ -16,7 +16,7 @@ router.route("/getAllProducts").get(getAllProducts);
 
 router
   .route("/")
-  .post([authenticateUser, authorizePermissions("admin")], createProduct)
+  .post([authenticateUser, authorizePermissions("admin","user")], createProduct)
   .get(getAllProducts);
 
 router

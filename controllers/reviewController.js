@@ -47,7 +47,10 @@ const getAllReviews = async (req, res) => {
 const getSingleReview = async (req, res) => {
   const reviewId = req.params.id;
 
-  const review = await Review.findById({ _id: reviewId });
+  const review = await Review.findById({ _id: reviewId }).populate({
+    path: "product",
+    select: "name company price",
+  });
 
   if (!review) {
     throw new NotFoundError(`Review with id: ${reviewId} not found`);

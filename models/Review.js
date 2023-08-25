@@ -34,4 +34,37 @@ const ReviewSchema = new mongoose.Schema(
 );
 ReviewSchema.index({ product: 1, user: 1 }, { unique: true }); // means a user can post only one review to a product
 
+ReviewSchema.statics.calculateAverageRating = async function (productId) {
+  console.log(productId);
+};
+
+// ReviewSchema.statics.calculateAverageRating = async function (productId) {
+//   const aggregationResult = await this.aggregate([
+//     {
+//       $match: { productId: productId }, // Match reviews for the specified product
+//     },
+//     {
+//       $group: {
+//         _id: null,
+//         averageRating: { $avg: "$rating" }, // Calculate the average of the 'rating' field
+//       },
+//     },
+//   ]);
+
+//   if (aggregationResult.length > 0) {
+//     const averageRating = aggregationResult[0].averageRating;
+//     return averageRating;
+//   } else {
+//     return 0; // No reviews found for the product
+//   }
+// };
+
+ReviewSchema.post("save", async function () {
+  await this.constructor.calculateAverageRating(this.product);
+});
+
+ReviewSchema.post("remove", async function () {
+  await this.constructor.calculateAverageRating(this.product);
+});
+
 module.exports = mongoose.model("Review", ReviewSchema);

@@ -95,7 +95,7 @@ const deleteReview = async (req, res) => {
   checkPermissions(req.user, review.user); // confirm user is rightful owner of the review
 
   if (review) {
-    await Review.remove();
+    await review.remove();
   }
 
   res.status(StatusCodes.OK).json({ msg: `deleted Review ${reviewId}` });

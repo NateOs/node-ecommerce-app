@@ -18,7 +18,7 @@ const SingleCartItemSchema = mongoose.Schema({
     required: true,
   },
   product: {
-    type: "mongoose.Schema.ObjectId",
+    type: mongoose.Schema.ObjectId,
     ref: "Product",
     required: true,
   },

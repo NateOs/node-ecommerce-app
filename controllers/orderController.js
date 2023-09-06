@@ -13,17 +13,21 @@ const {
 const createOrder = async (req, res) => {
   res.send("create order");
 };
-const updateOrder = async (req, res) => {
-  res.send("update order");
-};
+
 const getAllOrders = async (req, res) => {
   res.send("get all orders");
 };
-const getSingleOrder = async (req, res) => {
-  res.send("get a single order");
-};
+
 const getCurrentUserOrders = async (req, res) => {
   res.send("get current user orders");
+};
+
+const updateOrder = async (req, res) => {
+  res.send("update user order");
+};
+
+const getSingleOrder = async (req, res) => {
+  res.send("get a single user order");
 };
 
 module.exports = {

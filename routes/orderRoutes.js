@@ -19,8 +19,7 @@ router
 router.route("/showAllMyOrders").get(authenticateUser, getCurrentUserOrders);
 
 router
-  .route(":/id")
-  .get(authenticateUser, getSingleOrder)
-  .patch(authenticateUser, updateOrder);
-
+  .route("/:id")
+  .patch(authenticateUser, updateOrder)
+  .get(authenticateUser, getSingleOrder);
 module.exports = router;

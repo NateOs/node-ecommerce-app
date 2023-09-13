@@ -1,5 +1,30 @@
 const mongoose = require("mongoose");
 
+const SingleOrderItemSchema = mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  amount: {
+    type: Number,
+    required: true,
+  },
+  product: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Product",
+    required: true,
+  },
+});
+
+
 const OrderSchema = mongoose.Schema(
   {
     tax: {
@@ -18,12 +43,10 @@ const OrderSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-		cartItems: [
-		
-	],
+    orderItems: [SingleOrderItemSchema],
     status: {
       type: String,
-      enum: ["pending", " failed", "paid", "delivered", "cancelled"],
+      enum: ["pending", "failed", "paid", "delivered", "cancelled"],
       default: "pending",
     },
     user: {
@@ -33,7 +56,7 @@ const OrderSchema = mongoose.Schema(
     },
     clientSecret: {
       type: String,
-      required: String,
+      required: true,
     },
   },
   {

@@ -24,9 +24,11 @@ const SingleOrderItemSchema = mongoose.Schema({
   },
 });
 
-
 const OrderSchema = mongoose.Schema(
   {
+    paymentIntentId: {
+      type: String,
+    },
     tax: {
       type: Number,
       required: true,

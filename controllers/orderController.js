@@ -18,7 +18,6 @@ const fakeStripeAPI = async ({ amount, currency }) => {
 
 const createOrder = async (req, res) => {
   const { tax, shippingFee, items: cartItems } = req.body;
-
   if (!cartItems || cartItems.length < 1) {
     throw new BadRequestError("No cart items provided");
   }
@@ -50,7 +49,7 @@ const createOrder = async (req, res) => {
 
     // add item to order
     orderItems = [...orderItems, singleOrderItem];
-    
+
     // calculate subtotal
     subtotal += item.amount * price;
 
@@ -78,20 +77,52 @@ const createOrder = async (req, res) => {
   }
 };
 
+// as long as user is admin, response will be returned
 const getAllOrders = async (req, res) => {
-  res.send("get all orders");
+  const orders = await Order.find({});
+  res.status(StatusCodes.OK).json({ hits: orders.length, orders });
 };
 
 const getCurrentUserOrders = async (req, res) => {
-  res.send("get current user orders");
+  const userId = req.user.userId;
+  const userOrders = await Order.find({ user: userId });
+  if (!userOrders.length < 0) {
+    throw new NotFoundError("User has no orders");
+  }
+  res
+    .status(StatusCodes.OK)
+    .json({ hits: userOrders.length, orders: userOrders });
 };
 
 const updateOrder = async (req, res) => {
-  res.send("update user order");
+  const orderId = req.params.id;
+  const paymentIntent = req.body.paymentIntentId;
+
+  const order = await Order.findOne({ _id: orderId });
+
+  checkPermissions(req.user, order.user);
+
+  if (!order) {
+    throw new NotFoundError("Order with id " + orderId + "not found");
+  }
+
+  order.paymentIntentId = paymentIntent;
+  order.status = "paid";
+
+  await order.save();
+  res.status(StatusCodes.OK).json({ order });
 };
 
 const getSingleOrder = async (req, res) => {
-  res.send("get a single user order");
+  const orderId = req.params.id;
+  const order = await Order.findOne({ _id: orderId });
+
+  if (!order) {
+    throw new NotFoundError("Order with id " + orderId + " not found");
+  }
+
+  checkPermissions(req.user, order.user);
+  res.status(StatusCodes.OK).json({ order });
 };
 
 module.exports = {
